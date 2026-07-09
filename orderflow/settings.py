@@ -5,7 +5,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = "django-insecure-orderflow-dev-key-change-me"
 DEBUG = True
-ALLOWED_HOSTS = ["https://ecomm-order-flow-vsmashers.vercel.app/"]
+ALLOWED_HOSTS = ["*"]
 
 INSTALLED_APPS = [
     "django.contrib.admin",
