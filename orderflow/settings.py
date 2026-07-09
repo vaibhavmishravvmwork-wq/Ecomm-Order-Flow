@@ -1,3 +1,5 @@
+import os
+import shutil
 from pathlib import Path
 
 
@@ -48,10 +50,22 @@ TEMPLATES = [
 WSGI_APPLICATION = "orderflow.wsgi.application"
 ASGI_APPLICATION = "orderflow.asgi.application"
 
+
+def _database_path() -> Path:
+    local_database = BASE_DIR / "db.sqlite3"
+    if os.environ.get("VERCEL"):
+        runtime_dir = Path("/tmp") / "orderflow"
+        runtime_dir.mkdir(parents=True, exist_ok=True)
+        runtime_database = runtime_dir / "db.sqlite3"
+        if not runtime_database.exists() and local_database.exists():
+            shutil.copy2(local_database, runtime_database)
+        return runtime_database
+    return local_database
+
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
+        "NAME": _database_path(),
     }
 }
 
