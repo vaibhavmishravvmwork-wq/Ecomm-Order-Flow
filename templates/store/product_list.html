@@ -1,0 +1,63 @@
+{% extends "customer/base_customer.html" %}
+{% block title %}Products | OrderFlow{% endblock %}
+{% block content %}
+<div class="d-flex flex-column flex-md-row justify-content-between align-items-md-end gap-3 mb-4">
+  <div>
+    <div class="eyebrow">Catalog</div>
+    <h1 class="page-heading h2 mb-1">Browse products</h1>
+    <p class="text-muted mb-0">Search, filter, and add items directly to your cart.</p>
+  </div>
+  <form class="d-flex gap-2" method="get">
+    <input class="form-control" name="q" value="{{ query }}" placeholder="Search products...">
+    <select class="form-select" name="category">
+      <option value="">All categories</option>
+      {% for category in categories %}
+        <option value="{{ category }}" {% if selected_category == category %}selected{% endif %}>{{ category }}</option>
+      {% endfor %}
+    </select>
+    <button class="btn btn-brand" type="submit">Search</button>
+  </form>
+</div>
+
+<div class="row g-4">
+  {% for product in products %}
+    <div class="col-sm-6 col-lg-4 col-xxl-3">
+      <div class="product-card h-100">
+        {% with image=product.primary_image %}
+          {% if image %}
+            <img src="{{ image.image.url }}" class="thumb-img" alt="{{ product.name }}">
+          {% else %}
+            <div class="thumb-img d-flex align-items-center justify-content-center text-muted">No image</div>
+          {% endif %}
+        {% endwith %}
+        <div class="p-3 d-flex flex-column h-100">
+          <div class="small text-muted">{{ product.category }}</div>
+          <h2 class="h6 mb-2">{{ product.name }}</h2>
+          <p class="small text-muted flex-grow-1">{{ product.description|truncatechars:110 }}</p>
+          <div class="d-flex justify-content-between align-items-center mt-auto">
+            <div>
+              <div class="fw-bold text-brand">${{ product.price }}</div>
+              <div class="small {% if product.stock_quantity > 0 %}text-success{% else %}text-danger{% endif %}">
+                {% if product.stock_quantity > 0 %}In stock: {{ product.stock_quantity }}{% else %}Out of stock{% endif %}
+              </div>
+            </div>
+            <div class="d-flex gap-2">
+              <a class="btn btn-sm btn-outline-brand" href="{{ product.get_absolute_url }}">View</a>
+              {% if product.stock_quantity > 0 %}
+                <form method="post" action="{% url 'store:cart_add' product.id %}">
+                  {% csrf_token %}
+                  <input type="hidden" name="quantity" value="1">
+                  <input type="hidden" name="next" value="{% url 'store:cart' %}">
+                  <button class="btn btn-sm btn-brand" type="submit"><i class="bi bi-cart-plus"></i></button>
+                </form>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  {% empty %}
+    <div class="col-12"><div class="surface-card">No products matched your search.</div></div>
+  {% endfor %}
+</div>
+{% endblock %}

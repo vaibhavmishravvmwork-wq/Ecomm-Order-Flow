@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0c1930"/>
+      <stop offset="52%" stop-color="#102f4a"/>
+      <stop offset="100%" stop-color="#0f5f88"/>
+    </linearGradient>
+  </defs>
+  <rect width="1600" height="900" fill="url(#g)"/>
+  <circle cx="1200" cy="180" r="240" fill="#4bb3fd" opacity="0.18"/>
+  <circle cx="260" cy="640" r="300" fill="#ffffff" opacity="0.06"/>
+  <text x="120" y="160" fill="#ffffff" font-size="92" font-family="Segoe UI, Arial, sans-serif" font-weight="700">OrderFlow</text>
+  <text x="120" y="245" fill="#dbeafe" font-size="34" font-family="Segoe UI, Arial, sans-serif">Order fulfillment and returns</text>
+</svg>

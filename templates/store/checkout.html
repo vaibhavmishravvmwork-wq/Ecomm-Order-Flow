@@ -1,0 +1,36 @@
+{% extends "customer/base_customer.html" %}
+{% block title %}Checkout | OrderFlow{% endblock %}
+{% block content %}
+<div class="row g-4">
+  <div class="col-lg-7">
+    <div class="surface-card">
+      <div class="h4 mb-3">Shipping address</div>
+      <form method="post">
+        {% csrf_token %}
+        <label class="form-label fw-semibold">{{ form.shipping_address.label }}</label>
+        {{ form.shipping_address }}
+        <button class="btn btn-brand mt-3 w-100 py-2 fw-semibold" type="submit">Place order</button>
+      </form>
+    </div>
+  </div>
+  <div class="col-lg-5">
+    <div class="summary-card p-4 sticky-top" style="top: 1rem;">
+      <div class="h4 mb-3">Order summary</div>
+      {% for item in items %}
+        <div class="d-flex justify-content-between mb-2">
+          <span>{{ item.product.name }} × {{ item.quantity }}</span>
+          <strong>${{ item.subtotal }}</strong>
+        </div>
+      {% endfor %}
+      <hr>
+      <div class="d-flex justify-content-between mb-2"><span>Subtotal</span><strong>${{ subtotal }}</strong></div>
+      <div class="d-flex justify-content-between mb-2"><span>Shipping</span><strong>Free</strong></div>
+      <div class="d-flex justify-content-between align-items-center mt-3">
+        <span class="h5 mb-0">Total</span>
+        <span class="h3 mb-0 text-brand">${{ subtotal }}</span>
+      </div>
+      <div class="small text-muted mt-3">All orders are Cash on Delivery.</div>
+    </div>
+  </div>
+</div>
+{% endblock %}

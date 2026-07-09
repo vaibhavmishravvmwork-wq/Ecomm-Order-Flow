@@ -1,0 +1,35 @@
+{% extends "staff/base_staff.html" %}
+{% block title %}Returns | OrderFlow Admin{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-end mb-4">
+  <div>
+    <div class="eyebrow">Return Management</div>
+    <h1 class="page-heading h2 mb-1">Return requests</h1>
+  </div>
+</div>
+
+<div class="table-card table-responsive">
+  <table class="table align-middle mb-0">
+    <thead><tr><th>Order Item</th><th>Customer</th><th>Reason</th><th>Status</th><th>Action</th></tr></thead>
+    <tbody>
+      {% for request in return_requests %}
+        <tr>
+          <td>{{ request.order_item.product.name }}</td>
+          <td>{{ request.user.get_full_name|default:request.user.username }}</td>
+          <td>{{ request.get_reason_display }}</td>
+          <td><span class="badge-soft badge-status-{{ request.status }}">{{ request.get_status_display }}</span></td>
+          <td>
+            <form method="post" class="d-flex flex-wrap gap-2">
+              {% csrf_token %}
+              <input type="hidden" name="return_id" value="{{ request.id }}">
+              <button name="action" value="approve" class="btn btn-sm btn-outline-brand" type="submit">Approve</button>
+              <button name="action" value="reject" class="btn btn-sm btn-outline-danger" type="submit">Reject</button>
+              <button name="action" value="complete" class="btn btn-sm btn-brand" type="submit">Complete</button>
+            </form>
+          </td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

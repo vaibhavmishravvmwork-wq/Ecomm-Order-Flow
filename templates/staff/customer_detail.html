@@ -1,0 +1,59 @@
+{% extends "staff/base_staff.html" %}
+{% block title %}Customer | OrderFlow Admin{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-end mb-4">
+  <div>
+    <div class="eyebrow">Customer Profile</div>
+    <h1 class="page-heading h2 mb-1">{{ customer.get_full_name|default:customer.username }}</h1>
+    <p class="text-muted mb-0">{{ customer.email }}</p>
+  </div>
+</div>
+
+<div class="row g-3 mb-4">
+  <div class="col-md-4"><div class="metric-card"><div class="metric-label">Orders</div><div class="metric-value">{{ stats.total_orders }}</div></div></div>
+  <div class="col-md-4"><div class="metric-card"><div class="metric-label">Total spent</div><div class="metric-value">${{ stats.total_spent }}</div></div></div>
+  <div class="col-md-4"><div class="metric-card"><div class="metric-label">Open returns</div><div class="metric-value">{{ stats.open_returns }}</div></div></div>
+</div>
+
+<div class="row g-4">
+  <div class="col-lg-7">
+    <div class="surface-card">
+      <h2 class="h5 mb-3">Order history</h2>
+      <div class="d-grid gap-3">
+        {% for order in orders %}
+          <a class="text-decoration-none text-body" href="{% url 'store:staff_order_detail' order.id %}">
+            <div class="border rounded-3 p-3 d-flex justify-content-between align-items-center">
+              <div>
+                <div class="fw-semibold">Order #{{ order.id }}</div>
+                <div class="small text-muted">{{ order.created_at|date:"M d, Y" }}</div>
+              </div>
+              <div class="text-end">
+                <div class="fw-bold text-brand">${{ order.total_amount }}</div>
+                <span class="badge-soft badge-status-{{ order.status }}">{{ order.get_status_display }}</span>
+              </div>
+            </div>
+          </a>
+        {% empty %}
+          <div class="text-muted">No orders recorded.</div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-5">
+    <div class="surface-card">
+      <h2 class="h5 mb-3">Return history</h2>
+      <div class="d-grid gap-3">
+        {% for request in returns %}
+          <div class="border rounded-3 p-3">
+            <div class="fw-semibold">{{ request.order_item.product.name }}</div>
+            <div class="small text-muted">{{ request.get_reason_display }}</div>
+            <span class="badge-soft badge-status-{{ request.status }} mt-2">{{ request.get_status_display }}</span>
+          </div>
+        {% empty %}
+          <div class="text-muted">No return requests recorded.</div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

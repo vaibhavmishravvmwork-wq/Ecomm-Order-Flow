@@ -1,0 +1,27 @@
+{% extends "staff/base_staff.html" %}
+{% block title %}Customers | OrderFlow Admin{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-end mb-4">
+  <div>
+    <div class="eyebrow">Customer Management</div>
+    <h1 class="page-heading h2 mb-1">Customers</h1>
+  </div>
+</div>
+
+<div class="table-card table-responsive">
+  <table class="table align-middle mb-0">
+    <thead><tr><th>Name</th><th>Email</th><th>Orders</th><th>Returns</th><th></th></tr></thead>
+    <tbody>
+      {% for customer in customers %}
+        <tr>
+          <td>{{ customer.get_full_name|default:customer.username }}</td>
+          <td>{{ customer.email }}</td>
+          <td>{{ customer.order_count }}</td>
+          <td>{{ customer.return_count }}</td>
+          <td><a class="btn btn-sm btn-outline-brand" href="{% url 'store:staff_customer_detail' customer.id %}">Open</a></td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

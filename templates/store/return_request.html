@@ -1,0 +1,25 @@
+{% extends "customer/base_customer.html" %}
+{% block title %}Request Return | OrderFlow{% endblock %}
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-lg-8">
+    <div class="surface-card">
+      <div class="eyebrow mb-2">Return request</div>
+      <h1 class="page-heading h3 mb-1">{{ order_item.product.name }}</h1>
+      <p class="text-muted">Order #{{ order_item.order.id }} · Qty {{ order_item.quantity }}</p>
+      <form method="post">
+        {% csrf_token %}
+        <div class="mb-3">
+          <label class="form-label fw-semibold">Reason</label>
+          {{ form.reason }}
+        </div>
+        <div class="mb-3">
+          <label class="form-label fw-semibold">Description</label>
+          {{ form.description }}
+        </div>
+        <button class="btn btn-brand py-2 fw-semibold" type="submit">Submit return request</button>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

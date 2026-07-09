@@ -1,0 +1,51 @@
+{% extends "customer/base_customer.html" %}
+{% block title %}{{ product.name }} | OrderFlow{% endblock %}
+{% block content %}
+<div class="row g-4">
+  <div class="col-lg-6">
+    <div class="surface-card p-0 overflow-hidden">
+      {% with image=product.primary_image %}
+        {% if image %}
+          <img src="{{ image.image.url }}" class="w-100" style="max-height: 520px; object-fit: cover;" alt="{{ product.name }}">
+        {% else %}
+          <div class="d-flex align-items-center justify-content-center soft-bg" style="min-height: 420px;">No image available</div>
+        {% endif %}
+      {% endwith %}
+      {% if product.images.count > 1 %}
+        <div class="d-flex gap-2 flex-wrap p-3 border-top">
+          {% for image in product.images.all %}
+            <img src="{{ image.image.url }}" class="gallery-thumb" alt="{{ product.name }}">
+          {% endfor %}
+        </div>
+      {% endif %}
+    </div>
+  </div>
+  <div class="col-lg-6">
+    <div class="surface-card h-100">
+      <div class="eyebrow mb-2">{{ product.category }}</div>
+      <h1 class="page-heading h2 mb-3">{{ product.name }}</h1>
+      <div class="d-flex align-items-center gap-2 mb-3">
+        <span class="chip chip-primary">{% if product.stock_quantity > 0 %}In stock{% else %}Out of stock{% endif %}</span>
+        <span class="text-muted small">{{ product.stock_quantity }} available</span>
+      </div>
+      <div class="display-6 fw-bold text-brand mb-3">${{ product.price }}</div>
+      <p class="text-muted">{{ product.description }}</p>
+      <form method="post" action="{% url 'store:cart_add' product.id %}" class="mt-4">
+        {% csrf_token %}
+        <input type="hidden" name="next" value="{% url 'store:cart' %}">
+        <div class="row g-2 align-items-end">
+          <div class="col-4 col-md-3">
+            <label class="form-label fw-semibold">Qty</label>
+            <input class="form-control" type="number" name="quantity" value="1" min="1" max="{{ product.stock_quantity }}">
+          </div>
+          <div class="col-8 col-md-9">
+            <button class="btn btn-brand w-100 py-2 fw-semibold" type="submit" {% if product.stock_quantity <= 0 %}disabled{% endif %}>
+              Add to cart
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

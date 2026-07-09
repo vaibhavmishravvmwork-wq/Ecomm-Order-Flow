@@ -1,0 +1,81 @@
+{% extends "customer/base_customer.html" %}
+{% block title %}Cart | OrderFlow{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-end mb-4">
+  <div>
+    <div class="eyebrow">Shopping</div>
+    <h1 class="page-heading h2 mb-1">Your cart</h1>
+    <p class="text-muted mb-0">Review items before checkout.</p>
+  </div>
+  <a class="btn btn-outline-brand" href="{% url 'store:product_list' %}">Continue shopping</a>
+</div>
+
+<div class="row g-4">
+  <div class="col-lg-8">
+    <div class="table-card table-responsive">
+      <table class="table align-middle mb-0">
+        <thead>
+          <tr>
+            <th>Product</th>
+            <th>Quantity</th>
+            <th>Price</th>
+            <th>Total</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for item in items %}
+            <tr>
+              <td>
+                <div class="d-flex align-items-center gap-3">
+                  {% with image=item.product.primary_image %}
+                    {% if image %}
+                      <img src="{{ image.image.url }}" class="gallery-thumb" alt="{{ item.product.name }}">
+                    {% else %}
+                      <div class="gallery-thumb soft-bg d-flex align-items-center justify-content-center">No</div>
+                    {% endif %}
+                  {% endwith %}
+                  <div>
+                    <div class="fw-semibold">{{ item.product.name }}</div>
+                    <div class="small text-muted">{{ item.product.category }}</div>
+                  </div>
+                </div>
+              </td>
+              <td>
+                <form method="post" action="{% url 'store:cart_update' item.id %}" class="d-flex gap-2 align-items-center">
+                  {% csrf_token %}
+                  <input type="number" name="quantity" min="1" value="{{ item.quantity }}" class="form-control" style="max-width: 90px;">
+                  <button class="btn btn-sm btn-outline-brand" type="submit">Update</button>
+                </form>
+              </td>
+              <td>${{ item.product.price }}</td>
+              <td class="fw-bold text-brand">${{ item.subtotal }}</td>
+              <td>
+                <form method="post" action="{% url 'store:cart_remove' item.id %}">
+                  {% csrf_token %}
+                  <button class="btn btn-sm btn-link text-danger text-decoration-none" type="submit">Remove</button>
+                </form>
+              </td>
+            </tr>
+          {% empty %}
+            <tr><td colspan="5" class="text-center py-5 text-muted">Your cart is empty.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="col-lg-4">
+    <div class="summary-card p-4 sticky-top" style="top: 1rem;">
+      <div class="h4 mb-3">Order summary</div>
+      <div class="d-flex justify-content-between mb-2"><span class="text-muted">Subtotal</span><strong>${{ subtotal }}</strong></div>
+      <div class="d-flex justify-content-between mb-3"><span class="text-muted">Shipping</span><strong>COD</strong></div>
+      <hr>
+      <div class="d-flex justify-content-between align-items-center mb-4">
+        <span class="h5 mb-0">Total</span>
+        <span class="h3 mb-0 text-brand">${{ subtotal }}</span>
+      </div>
+      <a class="btn btn-brand w-100 py-2 fw-semibold {% if not items %}disabled{% endif %}" href="{% url 'store:checkout' %}">Proceed to checkout</a>
+    </div>
+  </div>
+</div>
+{% endblock %}

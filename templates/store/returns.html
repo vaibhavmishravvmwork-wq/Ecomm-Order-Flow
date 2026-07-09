@@ -1,0 +1,34 @@
+{% extends "customer/base_customer.html" %}
+{% block title %}Returns | OrderFlow{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-end mb-4">
+  <div>
+    <div class="eyebrow">Returns</div>
+    <h1 class="page-heading h2 mb-1">Return requests</h1>
+    <p class="text-muted mb-0">Track return progress and outcomes.</p>
+  </div>
+</div>
+
+<div class="d-grid gap-3">
+  {% for request in return_requests %}
+    <div class="order-card p-3 p-md-4">
+      <div class="row align-items-center g-3">
+        <div class="col-md-5">
+          <div class="fw-bold">{{ request.order_item.product.name }}</div>
+          <div class="small text-muted">Order #{{ request.order_item.order.id }} · {{ request.get_reason_display }}</div>
+        </div>
+        <div class="col-md-3">
+          <span class="badge-soft badge-status-{{ request.status }}">{{ request.get_status_display }}</span>
+        </div>
+        <div class="col-md-2 text-muted small">{{ request.requested_at|date:"M d, Y" }}</div>
+        <div class="col-md-2 text-md-end"><a class="btn btn-sm btn-outline-brand" href="{% url 'store:order_detail' request.order_item.order.id %}">View order</a></div>
+      </div>
+      {% if request.description %}
+        <div class="small text-muted mt-3">{{ request.description }}</div>
+      {% endif %}
+    </div>
+  {% empty %}
+    <div class="surface-card text-center py-5 text-muted">You have no return requests.</div>
+  {% endfor %}
+</div>
+{% endblock %}

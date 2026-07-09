@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+{% block shell %}
+<div class="d-lg-none bg-white border-bottom sticky-top">
+  <div class="container-fluid py-3 d-flex align-items-center justify-content-between">
+    <a class="navbar-brand brand-mark text-brand mb-0" href="{% url 'store:staff_dashboard' %}">OrderFlow Admin</a>
+    <button class="btn btn-outline-brand" type="button" data-bs-toggle="offcanvas" data-bs-target="#staffNav">
+      <i class="bi bi-list"></i>
+    </button>
+  </div>
+</div>
+  {% comment %} 
+<div class="offcanvas-lg offcanvas-start sidebar-shell" tabindex="-1" id="staffNav">
+  <div class="offcanvas-header d-lg-none">
+    <h5 class="offcanvas-title">Menu</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
+  </div>
+<div class="offcanvas-body p-0">
+    <div class="d-flex flex-column p-3 h-100">
+      <div class="mb-4">
+        <a class="brand-mark text-brand text-decoration-none fs-4" href="{% url 'store:staff_dashboard' %}">OrderFlow Admin</a>
+        <div class="text-muted small">Management Suite</div>
+      </div>
+      <nav class="nav nav-pills flex-column gap-2">
+        <a class="nav-link sidebar-link {% if request.resolver_match.url_name == 'staff_dashboard' %}active{% endif %}" href="{% url 'store:staff_dashboard' %}">Dashboard</a>
+        <a class="nav-link sidebar-link {% if 'staff_products' in request.resolver_match.url_name %}active{% endif %}" href="{% url 'store:staff_products' %}">Products</a>
+        <a class="nav-link sidebar-link {% if request.resolver_match.url_name == 'staff_inventory' %}active{% endif %}" href="{% url 'store:staff_inventory' %}">Inventory</a>
+        <a class="nav-link sidebar-link {% if 'staff_orders' in request.resolver_match.url_name %}active{% endif %}" href="{% url 'store:staff_orders' %}">Orders</a>
+        <a class="nav-link sidebar-link {% if request.resolver_match.url_name == 'staff_returns' %}active{% endif %}" href="{% url 'store:staff_returns' %}">Returns</a>
+        <a class="nav-link sidebar-link {% if request.resolver_match.url_name == 'staff_customers' %}active{% endif %}" href="{% url 'store:staff_customers' %}">Customers</a>
+        <a class="nav-link sidebar-link" href="{% url 'store:home' %}">Storefront</a>
+      </nav>
+      <div class="mt-auto pt-4">
+        <div class="small text-muted mb-2">Logged in as</div>
+        <div class="fw-semibold">{{ request.user.get_full_name|default:request.user.username }}</div>
+        <div class="small text-muted mb-3">{% if request.user.is_superuser %}Super Admin{% else %}Staff{% endif %}</div>
+        <form method="post" action="{% url 'logout' %}">{% csrf_token %}<button class="btn btn-sm btn-brand w-100">Logout</button></form>
+      </div>
+    </div>
+  </div> {% endcomment %}
+</div>
+
+<div class="d-flex min-vh-100">
+  <aside class="sidebar-shell d-none d-lg-block" style="width: 270px;">
+    <div class="p-3 d-flex flex-column h-100">
+      <div class="mb-4">
+        <a class="brand-mark text-brand text-decoration-none fs-4" href="{% url 'store:staff_dashboard' %}">OrderFlow Admin</a>
+        <div class="text-muted small">Management Suite</div>
+      </div>
+      <nav class="nav nav-pills flex-column gap-2">
+        <a class="nav-link sidebar-link {% if request.resolver_match.url_name == 'staff_dashboard' %}active{% endif %}" href="{% url 'store:staff_dashboard' %}">Dashboard</a>
+        <a class="nav-link sidebar-link {% if 'staff_products' in request.resolver_match.url_name %}active{% endif %}" href="{% url 'store:staff_products' %}">Products</a>
+        <a class="nav-link sidebar-link {% if request.resolver_match.url_name == 'staff_inventory' %}active{% endif %}" href="{% url 'store:staff_inventory' %}">Inventory</a>
+        <a class="nav-link sidebar-link {% if 'staff_orders' in request.resolver_match.url_name %}active{% endif %}" href="{% url 'store:staff_orders' %}">Orders</a>
+        <a class="nav-link sidebar-link {% if request.resolver_match.url_name == 'staff_returns' %}active{% endif %}" href="{% url 'store:staff_returns' %}">Returns</a>
+        <a class="nav-link sidebar-link {% if request.resolver_match.url_name == 'staff_customers' %}active{% endif %}" href="{% url 'store:staff_customers' %}">Customers</a>
+        <a class="nav-link sidebar-link" href="{% url 'store:home' %}">Storefront</a>
+      </nav>
+      <div class="mt-auto pt-4">
+        <div class="small text-muted mb-2">Logged in as</div>
+        <div class="fw-semibold">{{ request.user.get_full_name|default:request.user.username }}</div>
+        <div class="small text-muted mb-3">{% if request.user.is_superuser %}Super Admin{% else %}Staff{% endif %}</div>
+        <form method="post" action="{% url 'logout' %}">{% csrf_token %}<button class="btn btn-sm btn-brand w-100">Logout</button></form>
+      </div>
+    </div>
+  </aside>
+  <div class="flex-grow-1">
+    <main class="container-fluid py-4 px-3 px-lg-4">
+      {% include "partials/messages.html" %}
+      {% block content %}{% endblock %}
+    </main>
+  </div>
+</div>
+{% endblock %}

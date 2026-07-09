@@ -1,0 +1,72 @@
+{% extends "customer/base_customer.html" %}
+{% block title %}Profile | OrderFlow{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-end mb-4">
+  <div>
+    <div class="eyebrow">Profile</div>
+    <h1 class="page-heading h2 mb-1">Account overview</h1>
+    <p class="text-muted mb-0">Update your details and review order activity.</p>
+  </div>
+</div>
+
+<div class="row g-4 mb-4">
+  <div class="col-md-4"><div class="metric-card"><div class="metric-label">Orders</div><div class="metric-value">{{ order_stats.total_orders|default:0 }}</div><div class="text-muted small">Delivered: {{ order_stats.delivered|default:0 }}</div></div></div>
+  <div class="col-md-4"><div class="metric-card"><div class="metric-label">Returns</div><div class="metric-value">{{ return_stats.total_returns|default:0 }}</div><div class="text-muted small">Completed: {{ return_stats.completed|default:0 }}</div></div></div>
+  <div class="col-md-4"><div class="metric-card"><div class="metric-label">Cancelled</div><div class="metric-value">{{ order_stats.cancelled|default:0 }}</div><div class="text-muted small">Review activity at a glance</div></div></div>
+</div>
+
+<div class="row g-4">
+  <div class="col-lg-5">
+    <div class="surface-card">
+      <h2 class="h5 mb-3">Update profile</h2>
+      <form method="post">
+        {% csrf_token %}
+        {% for field in form %}
+          <div class="mb-3">
+            <label class="form-label fw-semibold">{{ field.label }}</label>
+            {{ field }}
+            {% for error in field.errors %}<div class="text-danger small">{{ error }}</div>{% endfor %}
+          </div>
+        {% endfor %}
+        <button class="btn btn-brand w-100 py-2 fw-semibold" type="submit">Save changes</button>
+      </form>
+    </div>
+  </div>
+  <div class="col-lg-7">
+    <div class="surface-card mb-4">
+      <h2 class="h5 mb-3">Recent orders</h2>
+      <div class="d-grid gap-3">
+        {% for order in order_history %}
+          <a class="text-decoration-none text-body" href="{% url 'store:order_detail' order.id %}">
+            <div class="d-flex justify-content-between align-items-center border rounded-3 p-3">
+              <div>
+                <div class="fw-semibold">Order #{{ order.id }}</div>
+                <div class="small text-muted">{{ order.created_at|date:"M d, Y" }}</div>
+              </div>
+              <div class="text-end">
+                <div class="fw-bold text-brand">${{ order.total_amount }}</div>
+                <div class="small text-muted">{{ order.get_status_display }}</div>
+              </div>
+            </div>
+          </a>
+        {% empty %}
+          <div class="text-muted">No orders yet.</div>
+        {% endfor %}
+      </div>
+    </div>
+    <div class="surface-card">
+      <h2 class="h5 mb-3">Recent returns</h2>
+      <div class="d-grid gap-3">
+        {% for request in return_history %}
+          <div class="border rounded-3 p-3">
+            <div class="fw-semibold">{{ request.order_item.product.name }}</div>
+            <div class="small text-muted">{{ request.get_reason_display }} · {{ request.get_status_display }}</div>
+          </div>
+        {% empty %}
+          <div class="text-muted">No return requests yet.</div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

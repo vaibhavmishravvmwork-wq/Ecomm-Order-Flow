@@ -1,0 +1,36 @@
+{% extends "customer/base_customer.html" %}
+{% block title %}Orders | OrderFlow{% endblock %}
+{% block content %}
+<div class="mb-4">
+  <div class="eyebrow">Orders</div>
+  <h1 class="page-heading h2 mb-1">Your order history</h1>
+  <p class="text-muted mb-0">Track fulfillment status and return eligibility.</p>
+</div>
+
+<div class="d-grid gap-3">
+  {% for order in orders %}
+    <div class="order-card p-3 p-md-4">
+      <div class="row align-items-center g-3">
+        <div class="col-md-5">
+          <div class="fw-bold">Order #{{ order.id }}</div>
+          <div class="small text-muted">Placed {{ order.created_at|date:"M d, Y" }}</div>
+          <span class="badge-soft badge-status-{{ order.status }} mt-2">{{ order.get_status_display }}</span>
+        </div>
+        <div class="col-md-3">
+          <div class="metric-label">Items</div>
+          <div class="fw-semibold">{{ order.items.count }}</div>
+        </div>
+        <div class="col-md-2">
+          <div class="metric-label">Total</div>
+          <div class="fw-bold text-brand">${{ order.total_amount }}</div>
+        </div>
+        <div class="col-md-2 text-md-end">
+          <a class="btn btn-sm btn-outline-brand" href="{% url 'store:order_detail' order.id %}">View details</a>
+        </div>
+      </div>
+    </div>
+  {% empty %}
+    <div class="surface-card text-center py-5 text-muted">You have not placed any orders yet.</div>
+  {% endfor %}
+</div>
+{% endblock %}

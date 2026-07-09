@@ -1,0 +1,32 @@
+{% extends "staff/base_staff.html" %}
+{% block title %}Products | OrderFlow Admin{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-end mb-4">
+  <div>
+    <div class="eyebrow">Product Management</div>
+    <h1 class="page-heading h2 mb-1">Products</h1>
+  </div>
+  <a class="btn btn-brand" href="{% url 'store:staff_product_create' %}"><i class="bi bi-plus-lg me-1"></i>Add product</a>
+</div>
+
+<div class="table-card table-responsive">
+  <table class="table align-middle mb-0">
+    <thead><tr><th>Name</th><th>Category</th><th>Price</th><th>Stock</th><th>Status</th><th></th></tr></thead>
+    <tbody>
+      {% for product in products %}
+        <tr>
+          <td>{{ product.name }}</td>
+          <td>{{ product.category }}</td>
+          <td>${{ product.price }}</td>
+          <td>{{ product.stock_quantity }}</td>
+          <td><span class="badge-soft {% if product.is_active %}badge-status-COMPLETED{% else %}badge-status-CANCELLED{% endif %}">{% if product.is_active %}Active{% else %}Inactive{% endif %}</span></td>
+          <td class="text-end d-flex gap-2 justify-content-end">
+            <a class="btn btn-sm btn-outline-brand" href="{% url 'store:staff_product_edit' product.id %}">Edit</a>
+            <form method="post" action="{% url 'store:staff_product_toggle' product.id %}">{% csrf_token %}<button class="btn btn-sm btn-outline-secondary" type="submit">Toggle</button></form>
+          </td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

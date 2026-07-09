@@ -1,0 +1,27 @@
+{% extends "staff/base_staff.html" %}
+{% block title %}Orders | OrderFlow Admin{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-end mb-4">
+  <div>
+    <div class="eyebrow">Order Management</div>
+    <h1 class="page-heading h2 mb-1">All orders</h1>
+  </div>
+</div>
+
+<div class="table-card table-responsive">
+  <table class="table align-middle mb-0">
+    <thead><tr><th>Order</th><th>Customer</th><th>Status</th><th>Total</th><th></th></tr></thead>
+    <tbody>
+      {% for order in orders %}
+        <tr>
+          <td>#{{ order.id }}</td>
+          <td>{{ order.user.get_full_name|default:order.user.username }}</td>
+          <td><span class="badge-soft badge-status-{{ order.status }}">{{ order.get_status_display }}</span></td>
+          <td>${{ order.total_amount }}</td>
+          <td><a class="btn btn-sm btn-outline-brand" href="{% url 'store:staff_order_detail' order.id %}">Open</a></td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}
